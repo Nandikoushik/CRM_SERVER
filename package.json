@@ -2,11 +2,10 @@
   "name": "crm",
   "version": "1.0.0",
   "description": "CRM",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js",
-    "build": "node index.js",
-    "server": "node index.js"
+    "start": "node app.js",
+    "build": "webpack --mode production",
   },
   "dependencies": {
     "aws-sdk": "^2.720.0",
