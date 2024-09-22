@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "build": "webpack --mode production",
+    "build": "webpack --mode production"
   },
   "dependencies": {
     "aws-sdk": "^2.720.0",
