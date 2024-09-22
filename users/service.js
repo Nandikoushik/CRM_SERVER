@@ -38,7 +38,7 @@ const service = {
 
               jwt.sign(
                 payload,
-                process.env.SECRETKEY,
+                "crm@2023",
                 {
                   expiresIn: keys.jwtTokenExpireTime, //31556926 // 1 year in seconds
                 },

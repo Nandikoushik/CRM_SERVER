@@ -12,7 +12,7 @@ const cors = require('cors');
 //const path = require('path');
 
 //specify port for node server to listen
-const PORT = process.env.PORT;
+const PORT = 9000;
 
 //load common routes
 const router = require("./routes");

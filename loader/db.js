@@ -1,10 +1,12 @@
 require("dotenv").config();
 const assert = require("assert");
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const clusterName=process.env.MONGODB_CLUSTER
-const username = encodeURIComponent(process.env.MONGODB_USERNAME).replace(/%20/g, '+');
-const password = encodeURIComponent(process.env.MONGODB_PASSWORD).replace(/%20/g, '+');
-const mongo_uri = `mongodb+srv://${username}:${password}@${clusterName}.awtbg.mongodb.net/?retryWrites=true&w=majority&appName=CRM`;
+const MONGODB_CLUSTER="crm";
+const MONGODB_USERNAME="crmSolutions";
+const MONGODB_PASSWORD="GfXyZ3hdvD6ylFN2";
+const username = encodeURIComponent(MONGODB_USERNAME).replace(/%20/g, '+');
+const password = encodeURIComponent(MONGODB_PASSWORD).replace(/%20/g, '+');
+const mongo_uri = `mongodb+srv://${username}:${password}@${MONGODB_CLUSTER}.awtbg.mongodb.net/?retryWrites=true&w=majority&appName=CRM`;
 const client = new MongoClient(mongo_uri, {
   serverApi: {
     version: ServerApiVersion.v1,
