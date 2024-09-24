@@ -6,6 +6,20 @@ const errHandeler = require("../helper/errHandeler");
 
 const service = {
 
+  addUser(userCredDetails) {
+    return new Promise(async (resolve, reject) => {
+      UserM.insert(userCredDetails)
+        .then((result) => {
+          const parsedResult = JSON.parse(result);
+          let id = parsedResult.data.insertedId;
+          resolve({ success: parsedResult.success, id, });
+        })
+        .catch(() => {
+          reject({ success: false, message: lang.invalidUser });
+        });
+    });
+  },
+
   authentication(data) {
     try {
       const mobile = data.mobile;
@@ -79,6 +93,19 @@ const service = {
     } catch (error) {
       errHandeler(error);
     }
+  },
+  async checkUsers(data) {
+    return new Promise((resolve, reject) => {
+      let query = data.phone ? { phone: data.phone } : { email: { $regex: `^${data.email}$`, $options: 'i' } };
+      UserM.checkUsers(query)
+        .then((result) => {
+          const parsedResult = JSON.parse(result);
+          resolve({ success: parsedResult.success, data: parsedResult.data });
+        })
+        .catch(() => {
+          reject({ success: false, message: lang.invalidUser });
+        });
+    });
   },
 };
 module.exports = service;

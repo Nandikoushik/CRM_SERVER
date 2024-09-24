@@ -1,16 +1,28 @@
 //@desc User Model
-const { objectify, filterArray } = require("../helper/helper");
-const { initDb, getDb } = require("../loader/db");
-const { Encrypted, Decrypted } = require("../helper/helper")
+const { objectify } = require("../helper/helper");
+const {  getDb } = require("../loader/db");
+const {  Decrypted } = require("../helper/helper")
 
 const User = {};
+
+User.insert = function (data) {
+  return new Promise(function (resolve, reject) {
+    const db = getDb();
+    db.collection("users").insertOne(data, function (err, result) {
+      if (err) {
+        let response = { success: false };
+        reject(JSON.stringify(response));
+      }
+      let response = { success: true, data: result };
+      resolve(JSON.stringify(response, null, 10));
+    });
+  });
+};
 
 User.authenticate = function (phone, password) {
   return new Promise(async function (resolve, reject) {
     const db = await getDb();
-    const query = [{ $match: { deleted: 0 } }];
-
-   // db.collection("users").insertOne({name:"koushik"})
+    const query = [{ $match: { phone: { $eq: phone }, deleted: 0 } }];
 
     db.collection("users")
       .aggregate(query)
@@ -22,7 +34,7 @@ User.authenticate = function (phone, password) {
             return resolve(JSON.stringify(res));
           }
         })
-        ;
+          ;
       });
   });
 };
@@ -93,6 +105,37 @@ User.findById = function (id, clq = null) {
         let response = { success: true, data: result };
         resolve(JSON.stringify(response));
       });
+  });
+};
+
+User.checkUsers = function (data) {
+  return new Promise(function (resolve, reject) {
+    try {
+      const db = getDb();
+      let selectedColumns = {};
+      let match = {};
+
+      if (data.phone) match["phone"] = data.phone;
+      if (data.email) match["email"] = data.email;
+
+      selectedColumns["email"] = 1;
+      selectedColumns["phone"] = 1;
+      let query = [{ $match: match }];
+
+      if (Object.keys(selectedColumns).length > 0)
+        query.push({ $project: selectedColumns });
+
+      db.collection("users")
+        .aggregate(query)
+        .toArray(async function (err, result) {
+          if (err) {
+            let response = { success: false };
+            reject(JSON.stringify(response));
+          }
+          let response = { success: true, data: result };
+          resolve(JSON.stringify(response, null, 10));
+        });
+    } catch (err) { }
   });
 };
 
