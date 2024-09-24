@@ -1,6 +1,5 @@
 const UserM = require("./model");
 const keys = require("../config/config");
-const isEmpty = require("is-empty");
 const lang = require("./language.english");
 const jwt = require("jsonwebtoken");
 const errHandeler = require("../helper/errHandeler");
@@ -9,11 +8,10 @@ const service = {
 
   authentication(data) {
     try {
-      const email = data.email;
+      const mobile = data.mobile;
       const password = data.password;
-
       return new Promise((resolve, reject) => {
-        UserM.authenticate(email, password)
+        UserM.authenticate(mobile, password)
           .then((result) => {
             const parsedResult = JSON.parse(result);
             if (
@@ -75,7 +73,6 @@ const service = {
           })
           .catch((err) => {
             console.log(err);
-
             reject({ success: false, message: lang.invalidLogin });
           });
       });

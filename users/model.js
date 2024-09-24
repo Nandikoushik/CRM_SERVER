@@ -1,36 +1,30 @@
 //@desc User Model
 const { objectify, filterArray } = require("../helper/helper");
-const { getDb } = require("../loader/db");
+const { initDb, getDb } = require("../loader/db");
 const { Encrypted, Decrypted } = require("../helper/helper")
 
 const User = {};
 
-//@desc fetch user detail using employee number, security pin
-//check if clique is valid. If valid then return clique details
-User.authenticate = function (email, password) {
-  return new Promise(function (resolve, reject) {
-    const db = getDb();
-    const query = [
-      {
-        $match: {
-          email: { $eq: email },
-          deleted: 0,
-        },
-      },
-    ];
+User.authenticate = function (phone, password) {
+  return new Promise(async function (resolve, reject) {
+    const db = await getDb();
+    const query = [{ $match: { deleted: 0 } }];
 
-        db.collection("users")
-          .aggregate(query)
-          .toArray(function (_, result) {
-            result.length&& result.find((el, index) => {
-              if (password === Decrypted(el.password)) {
-                  let res = { data: [result[index]] };
-                  return resolve(JSON.stringify(res));
-                }
-              })
-            return reject(JSON.stringify({ success: false }));
-          });
+   // db.collection("users").insertOne({name:"koushik"})
+
+    db.collection("users")
+      .aggregate(query)
+      .toArray(function (err, result) {
+        if (err) return reject(JSON.stringify({ success: false }));
+        result.length && result.find((el, index) => {
+          if (password === Decrypted(el.password)) {
+            let res = { data: [result[index]] };
+            return resolve(JSON.stringify(res));
+          }
+        })
+        ;
       });
+  });
 };
 
 //@desc get mmember details by phone/name
