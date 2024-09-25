@@ -50,7 +50,7 @@ app.get('/', (req, res) => res.send('@@@@@_Api Server Is Running Successfull_@@@
 /*app.use(express.static(path.join(__dirname, '../client/build')));
 app.get('/', (req, res)=>{res.sendFile(path.join(__dirname, '../client/build', 'index.html'))});*/
 
-app.use("/", expressMiddleWare[0], expressMiddleWare[1], router);//define the Allroutes
+app.use("/api/", expressMiddleWare[0], expressMiddleWare[1], router);//define the Allroutes
 app.use(errHandeler);
 
 //Server Listininging....
