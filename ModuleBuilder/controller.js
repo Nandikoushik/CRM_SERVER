@@ -5,7 +5,8 @@ module.exports = {
   async addSchema(req, res, next) {
     const moduleDTO = req.body;
     try {
-      moduleDTO.createdDate = moduleDTO.modifiedDate = isodate(currentDate);
+      moduleDTO.createdDate = isodate(moduleDTO.createdDate)
+      moduleDTO.modifiedDate = isodate(moduleDTO.modifiedDate);
       moduleDTO.createdBy = objectify(moduleDTO.createdBy);
       moduleDTO.modifiedBy = objectify(moduleDTO.modifiedBy);
       const response = await service.addSchema(moduleDTO);
