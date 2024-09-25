@@ -38,7 +38,7 @@ app.use(passport.initialize());
 app.use(fileUpload({ limits: { fileSize: 50 * 1024 * 1024 } }));
 
 app.use(cors({
-  origin: '*', methods: 'GET, POST, PUT, DELETE',
+  origin: 'https://crm-client-eight.vercel.app', methods: 'GET, POST, PUT, DELETE',
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
