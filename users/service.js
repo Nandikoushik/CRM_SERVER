@@ -33,19 +33,13 @@ const service = {
               parsedResult?.data[0]?.isPhoneVerified
             ) {
               const payload = {
-                id: parsedResult.data[0]._id,
-                name: parsedResult.data[0].firstName,
-                clique: parsedResult.data[0]._id,
-                cliqueName: "crm",
-                businessName: 'CRM_Tenant',
-                role: parsedResult.data[0].role,
-                publicRoleName: parsedResult.data[0].publicRoleName,
-                status: parsedResult.data[0].status,
-                tenantId: parsedResult.data[0].tenantId,
-                emailSetting: parsedResult?.data[0]?.emailSetting || false,
-                cid: "",
-                sid: "",
                 isUser: true,
+                id: parsedResult.data[0]._id,
+                role: parsedResult.data[0].role,
+                status: parsedResult.data[0].status,
+                businessName: parsedResult.data[0].businessName.trim(),
+                publicRoleName: keys.roleOptions[parsedResult.data[0].role.toString()],
+                name: parsedResult.data[0].ownerFirstName.trim() + " " + parsedResult.data[0].ownerLastName.trim(),
               };
 
               jwt.sign(

@@ -1,6 +1,6 @@
 
 const service = require("./service");
-const { cleanup, isodate, objectify } = require("../helper/helper");
+const { cleanup, isodate, objectify, Encrypted } = require("../helper/helper");
 const config = require("../config/config");
 
 module.exports = {
@@ -8,21 +8,15 @@ module.exports = {
     const currentDate = new Date();
     const userCredDTO = JSON.parse(req.body.userCred);
 
-    const ctd = isodate(currentDate);
-    userCredDTO.createdDate = ctd;
-
-    const mtd = isodate(currentDate);
-    userCredDTO.modifiedDate = mtd;
-
-    const objectCid = objectify(userCredDTO.createdBy);
-    userCredDTO.createdBy = objectCid;
-
-    const objectMid = objectify(userCredDTO.modifiedBy);
-    userCredDTO.modifiedBy = objectMid;
-
-    userCredDTO.activeTill = new Date().getTime() + config.graceTime,
-      userCredDTO.isPhoneVerified = true;
+    userCredDTO.isPhoneVerified = true;
     userCredDTO.isEmailVerified = true;
+    userCredDTO.role = objectify(userCredDTO.role);
+    userCredDTO.birthDate = isodate(userCredDTO.birthDate);
+    userCredDTO.createdDate = userCredDTO.modifiedDate = isodate(currentDate);
+    userCredDTO.createdBy = objectify(userCredDTO.createdBy);
+    userCredDTO.modifiedBy = objectify(userCredDTO.modifiedBy);
+    userCredDTO.password = Encrypted(userCredDTO.password);
+    userCredDTO.activeTill = new Date().getTime() + config.graceTime;
 
     try {
       const response = await service.addUser(userCredDTO);

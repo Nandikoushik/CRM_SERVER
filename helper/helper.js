@@ -218,7 +218,7 @@ exports.Encrypted = function (password) {
   try {
     return CryptoJS.AES.encrypt(password, config.secretKey).toString();
   } catch (error) {
-    return;
+    return password;
   }
 }
 
@@ -226,7 +226,7 @@ exports.Decrypted = function (Encryptedpassword) {
   try {
     return CryptoJS.AES.decrypt(Encryptedpassword, config.secretKey).toString(CryptoJS.enc.Utf8);
   } catch (error) {
-    return;
+    return Encryptedpassword;
   }
 }
 

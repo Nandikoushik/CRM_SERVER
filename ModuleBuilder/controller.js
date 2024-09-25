@@ -1,9 +1,13 @@
 const service = require("./service");
+const { isodate, objectify } = require("../helper/helper")
 
 module.exports = {
   async addSchema(req, res, next) {
     const moduleDTO = req.body;
     try {
+      moduleDTO.createdDate = moduleDTO.modifiedDate = isodate(currentDate);
+      moduleDTO.createdBy = objectify(moduleDTO.createdBy);
+      moduleDTO.modifiedBy = objectify(moduleDTO.modifiedBy);
       const response = await service.addSchema(moduleDTO);
       res.status(200).json(response);
     } catch (err) {
