@@ -37,15 +37,12 @@ app.use(passport.initialize());
 
 app.use(fileUpload({ limits: { fileSize: 50 * 1024 * 1024 } }));
 
-app.use(cors({
-  origin: 'https://crm-client-gold.vercel.app/', methods: 'GET, POST, PUT, DELETE',
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(cors());
 
 app.use(mongoSanitize({ replaceWith: "_" }));
 
 //Routes
-app.get('/', (req, res) => res.send('@@@@@_Api Server Is Running Successfull_@@@@@'))//define the routes
+app.get('/', (req, res) => res.send('@@@@@_Api Server Is Running Success_@@@@@'))//define the routes
 
 /*app.use(express.static(path.join(__dirname, '../client/build')));
 app.get('/', (req, res)=>{res.sendFile(path.join(__dirname, '../client/build', 'index.html'))});*/
