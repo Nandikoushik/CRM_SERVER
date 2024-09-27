@@ -24,4 +24,13 @@ module.exports = {
       next(err);
     }
   },
+  async deleteSchema(req, res, next) {
+    const id = req.query.id;
+    try {
+      const response = await service.deleteSchema(id);
+      res.status(200).json(response);
+    } catch (err) {
+      next(err);
+    }
+  },
 };

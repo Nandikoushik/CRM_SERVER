@@ -1,5 +1,5 @@
 const { getDb } = require("../loader/db");
-const { filterArray } = require("../helper/helper");
+const { filterArray, objectify } = require("../helper/helper");
 
 const ModuleSchema = {};
 
@@ -14,6 +14,23 @@ ModuleSchema.insert = function (data) {
             let response = { success: true, data: result };
             resolve(JSON.stringify(response, null, 10));
         });
+    });
+};
+
+ModuleSchema.delete = function (id) {
+    return new Promise(function (resolve, reject) {
+        const db = getDb();
+        const match = { _id: objectify(id) };
+
+        db.collection("moduleSchema").updateOne(match, { $set: { deleted: 1 } },
+            function (err, result) {
+                if (err) {
+                    let response = { success: false };
+                    reject(JSON.stringify(response));
+                }
+                let response = { success: true };
+                resolve(JSON.stringify(response, null, 10));
+            });
     });
 };
 

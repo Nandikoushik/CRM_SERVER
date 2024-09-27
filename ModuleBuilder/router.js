@@ -4,7 +4,7 @@ const controller = require("./controller");
 
 router.post("/", controller.addSchema);
 router.get("/", controller.getSchemalist);
+router.delete("/", controller.deleteSchema);
 // router.put("/", controller.putSchema);
-// router.delete("/", controller.deleteSchema);
 
 module.exports = router;

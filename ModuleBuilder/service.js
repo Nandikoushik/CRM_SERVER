@@ -3,19 +3,30 @@ const config = require('../config/config')
 
 const service = {
 
-    addSchema(userCredDetails) {
+    addSchema(schemaData) {
         return new Promise(async (resolve, reject) => {
-            model.insert(userCredDetails)
+            model.insert(schemaData)
                 .then((result) => {
                     const parsedResult = JSON.parse(result);
                     resolve({ success: parsedResult.success, });
                 })
                 .catch(() => {
-                    reject({ success: false, message: "Invalid request"});
+                    reject({ success: false, message: "Invalid request" });
                 });
         });
     },
-
+    deleteSchema(id) {
+        return new Promise(async (resolve, reject) => {
+            model.delete(id)
+                .then((result) => {
+                    const parsedResult = JSON.parse(result);
+                    resolve({ success: parsedResult.success, });
+                })
+                .catch(() => {
+                    reject({ success: false, message: "Invalid request" });
+                });
+        });
+    },
     list(data) {
         let returnFields = "";
         let limit = parseInt(data.limit);
