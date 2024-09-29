@@ -3,22 +3,23 @@ const { isodate, objectify } = require("../helper/helper")
 
 module.exports = {
   async addSchema(req, res, next) {
-    const moduleDTO = req.body;
+    const moduleSchemaDTO = req.body;
     try {
-      moduleDTO.createdDate = isodate(moduleDTO.createdDate)
-      moduleDTO.modifiedDate = isodate(moduleDTO.modifiedDate);
-      moduleDTO.createdBy = objectify(moduleDTO.createdBy);
-      moduleDTO.modifiedBy = objectify(moduleDTO.modifiedBy);
-      const response = await service.addSchema(moduleDTO);
+      moduleSchemaDTO.tenant = objectify(moduleSchemaDTO.tenant);
+      moduleSchemaDTO.createdBy = objectify(moduleSchemaDTO.createdBy);
+      moduleSchemaDTO.modifiedBy = objectify(moduleSchemaDTO.modifiedBy);
+      moduleSchemaDTO.createdDate = isodate(moduleSchemaDTO.createdDate)
+      moduleSchemaDTO.modifiedDate = isodate(moduleSchemaDTO.modifiedDate);
+      const response = await service.addSchema(moduleSchemaDTO);
       res.status(200).json(response);
     } catch (err) {
       next(err);
     }
   },
   async getSchemalist(req, res, next) {
-    const moduleDTO = req.query;
+    const moduleSchemaQuery = req.query;
     try {
-      const response = await service.list(moduleDTO);
+      const response = await service.list(moduleSchemaQuery);
       res.status(200).json(response);
     } catch (err) {
       next(err);

@@ -2,6 +2,7 @@
 const service = require("./service");
 const { cleanup, isodate, objectify, Encrypted } = require("../helper/helper");
 const config = require("../config/config");
+const ObjectID = require("mongodb").ObjectID;
 
 module.exports = {
   async addUser(req, res) {
@@ -11,6 +12,7 @@ module.exports = {
     userCredDTO.isPhoneVerified = true;
     userCredDTO.isEmailVerified = true;
     userCredDTO.role = objectify(userCredDTO.role);
+    userCredDTO.tenant = objectify(ObjectID().toString());
     userCredDTO.birthDate = isodate(userCredDTO.birthDate);
     userCredDTO.createdDate = userCredDTO.modifiedDate = isodate(currentDate);
     userCredDTO.createdBy = objectify(userCredDTO.createdBy);

@@ -1,30 +1,21 @@
 const model = require("./model");
-const config = require('../config/config')
+const config = require('../config/config');
+const { objectify } = require("../helper/helper");
 
 const service = {
 
     addSchema(schemaData) {
         return new Promise(async (resolve, reject) => {
             model.insert(schemaData)
-                .then((result) => {
-                    const parsedResult = JSON.parse(result);
-                    resolve({ success: parsedResult.success, });
-                })
-                .catch(() => {
-                    reject({ success: false, message: "Invalid request" });
-                });
+                .then((result) => resolve(result))
+                .catch((err) => reject(err));
         });
     },
     deleteSchema(id) {
         return new Promise(async (resolve, reject) => {
             model.delete(id)
-                .then((result) => {
-                    const parsedResult = JSON.parse(result);
-                    resolve({ success: parsedResult.success, });
-                })
-                .catch(() => {
-                    reject({ success: false, message: "Invalid request" });
-                });
+                .then((result) => resolve(result))
+                .catch((err) => reject(err));
         });
     },
     list(data) {
@@ -33,20 +24,16 @@ const service = {
         let page = parseInt(data.page);
         const search = data?.search;
         const id = data?.id;
+        const tenantId = data?.tenant;
         if (!limit || limit > config.dbReadRecLimit) limit = config.dbReadRecLimit;
         if (!page) page = 0;
         if (typeof data.returnFields != "undefined")
             returnFields = data.returnFields;
 
         return new Promise((resolve, reject) => {
-            model.list(returnFields, limit, page, id, search)
-                .then((result) => {
-                    const parsedResult = JSON.parse(result);
-                    resolve({ success: parsedResult.success, data: parsedResult.data, next: parsedResult.next });
-                })
-                .catch(() => {
-                    reject({ success: false, message: "Invalid request" });
-                });
+            model.list(returnFields, limit, page, tenantId, id, search)
+                .then((result) => resolve(result))
+                .catch((err) => reject(err));
         });
     },
 };

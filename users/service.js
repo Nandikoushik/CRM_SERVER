@@ -36,6 +36,7 @@ const service = {
                 isUser: true,
                 id: parsedResult.data[0]._id,
                 role: parsedResult.data[0].role,
+                tenant: parsedResult.data[0].tenant,
                 status: parsedResult.data[0].status,
                 businessName: parsedResult.data[0].businessName.trim(),
                 publicRoleName: keys.roleOptions[parsedResult.data[0].role.toString()],
@@ -49,6 +50,7 @@ const service = {
                   expiresIn: keys.jwtTokenExpireTime, //31556926 // 1 year in seconds
                 },
                 (err, token) => {
+                  if (err) reject({ success: false, message: lang.invalidReq })
                   resolve({
                     success: true,
                     token: "Bearer " + token,
@@ -79,10 +81,7 @@ const service = {
                 });
             }
           })
-          .catch((err) => {
-            console.log(err);
-            reject({ success: false, message: lang.invalidLogin });
-          });
+          .catch(() => reject({ success: false, message: lang.invalidLogin }));
       });
     } catch (error) {
       errHandeler(error);

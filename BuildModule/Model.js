@@ -1,24 +1,40 @@
 const { getDb } = require("../loader/db");
 const { filterArray, objectify } = require("../helper/helper");
 
-const ModuleSchema = {};
+const Model = {};
 
-ModuleSchema.insert = function (data) {
+Model.insert = function (tenantId, insertedData) {
     return new Promise(function (resolve, reject) {
         const db = getDb();
-        db.collection("moduleSchema").insertOne(data, (err) => {
+        const collection = 'module_' + tenantId.toString();
+        db.collection(collection).insertOne(insertedData, (err) => {
             if (err) reject({ success: false, message: err.message });
             resolve({ success: true });
         });
     });
 };
 
-ModuleSchema.delete = function (id) {
+Model.update = function (id, tenantId, updatedData) {
+    return new Promise(function (resolve, reject) {
+        const db = getDb();
+        const collection = 'module_' + tenantId.toString();
+        const match = { _id: objectify(id) };
+        db.collection(collection).findOneAndUpdate(match,
+            { $set: updatedData },
+            { returnOriginal: false },
+            (err, result) => {
+                if (err) reject({ success: false, message: err.message });
+                resolve({ success: true, data: result.value });
+            });
+    });
+};
+
+Model.delete = function (id, tenantId) {
     return new Promise(function (resolve, reject) {
         const db = getDb();
         const match = { _id: objectify(id) };
-
-        db.collection("moduleSchema").updateOne(match, { $set: { deleted: 1 } },
+        const collection = 'module_' + tenantId.toString();
+        db.collection(collection).updateOne(match, { $set: { deleted: 1 } },
             (err) => {
                 if (err) reject({ success: false, message: err.message });
                 resolve({ success: true });
@@ -26,14 +42,12 @@ ModuleSchema.delete = function (id) {
     });
 };
 
-ModuleSchema.list = function (returnFields, limit, page, tenantId, id, search = null) {
+Model.list = function (returnFields, limit, page, id, search = null, tenantId) {
     return new Promise(function (resolve, reject) {
         const db = getDb();
+        const collection = 'module_' + tenantId.toString();
         let match = {};
         let selectedColumns = {};
-
-        if (returnFields.length > 0)
-            returnFields.split(",").forEach(ele => selectedColumns[ele.trim()] = 1);
 
         if (search && typeof search === 'string') {
             try {
@@ -44,8 +58,11 @@ ModuleSchema.list = function (returnFields, limit, page, tenantId, id, search = 
             }
         }
 
+        if (returnFields.length > 0)
+            returnFields.split(",").forEach(ele => selectedColumns[ele.trim()] = 1);
+
         if (id) match["_id"] = objectify(id);
-        if (tenantId) match['tenant'] = objectify(tenantId);
+        match["deleted"] = 0;
 
         const query = [
             { $match: match },
@@ -55,7 +72,7 @@ ModuleSchema.list = function (returnFields, limit, page, tenantId, id, search = 
         ];
 
         if (returnFields.length > 0) query.push({ $project: selectedColumns });
-        db.collection("moduleSchema")
+        db.collection(collection)
             .aggregate(query)
             .toArray((err, result) => {
                 if (err) reject({ success: false, message: err.message });
@@ -65,4 +82,4 @@ ModuleSchema.list = function (returnFields, limit, page, tenantId, id, search = 
     });
 };
 
-module.exports = ModuleSchema;
+module.exports = Model;

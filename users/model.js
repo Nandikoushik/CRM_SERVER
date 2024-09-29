@@ -1,7 +1,7 @@
 //@desc User Model
 const { objectify } = require("../helper/helper");
-const {  getDb } = require("../loader/db");
-const {  Decrypted } = require("../helper/helper")
+const { getDb } = require("../loader/db");
+const { Decrypted } = require("../helper/helper")
 
 const User = {};
 
@@ -33,8 +33,8 @@ User.authenticate = function (phone, password) {
             let res = { data: [result[index]] };
             return resolve(JSON.stringify(res));
           }
-        })
-          ;
+        });
+        return reject(JSON.stringify({ success: false }))
       });
   });
 };
@@ -135,7 +135,7 @@ User.checkUsers = function (data) {
           let response = { success: true, data: result };
           resolve(JSON.stringify(response, null, 10));
         });
-    } catch (err) { }
+    } catch (err) { reject(err) }
   });
 };
 
