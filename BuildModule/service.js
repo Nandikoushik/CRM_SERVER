@@ -30,8 +30,8 @@ const service = {
     list(moduleDto) {
         let returnFields = "";
         const id = moduleDto?.id;
-        const tenantId = data.tenant;
-        const moduleId = data.moduleId;
+        const tenantId = moduleDto.tenant;
+        const moduleId = moduleDto.moduleId;
         const search = moduleDto?.search;
         let page = parseInt(moduleDto.page);
         let limit = parseInt(moduleDto.limit);
