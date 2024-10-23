@@ -42,7 +42,7 @@ Model.delete = function (id, tenantId) {
     });
 };
 
-Model.list = function (returnFields, limit, page, id, search = null, tenantId) {
+Model.list = function (returnFields, limit, page, id, moduleId, search = null, tenantId) {
     return new Promise(function (resolve, reject) {
         const db = getDb();
         const collection = 'module_' + tenantId.toString();
@@ -62,6 +62,7 @@ Model.list = function (returnFields, limit, page, id, search = null, tenantId) {
             returnFields.split(",").forEach(ele => selectedColumns[ele.trim()] = 1);
 
         if (id) match["_id"] = objectify(id);
+        if (moduleId) match["moduleId"] = objectify(moduleId);
         match["deleted"] = 0;
 
         const query = [

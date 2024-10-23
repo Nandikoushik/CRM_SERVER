@@ -31,6 +31,7 @@ const service = {
         let returnFields = "";
         const id = moduleDto?.id;
         const tenantId = data.tenant;
+        const moduleId = data.moduleId;
         const search = moduleDto?.search;
         let page = parseInt(moduleDto.page);
         let limit = parseInt(moduleDto.limit);
@@ -39,7 +40,7 @@ const service = {
         if (typeof moduleDto.returnFields != "undefined") returnFields = moduleDto.returnFields;
 
         return new Promise((resolve, reject) => {
-            model.list(returnFields, limit, page, id, search, tenantId)
+            model.list(returnFields, limit, page, id, moduleId, search, tenantId)
                 .then((result) => resolve(result))
                 .catch((err) => reject(err));
         });
