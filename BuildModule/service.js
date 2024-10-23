@@ -33,14 +33,14 @@ const service = {
         const tenantId = moduleDto.tenant;
         const moduleId = moduleDto.moduleId;
         const search = moduleDto?.search;
-        let page = parseInt(moduleDto.page);
-        let limit = parseInt(moduleDto.limit);
+        let page = parseInt(moduleDto?.page);
+        let limit = parseInt(moduleDto?.limit);
         if (!page) page = 0;
         if (!limit || limit > config.dbReadRecLimit) limit = config.dbReadRecLimit;
         if (typeof moduleDto.returnFields != "undefined") returnFields = moduleDto.returnFields;
 
         return new Promise((resolve, reject) => {
-            model.list(returnFields, limit, page, id, moduleId, search, tenantId)
+            model.list(returnFields, limit, page, id, moduleId, tenantId, search)
                 .then((result) => resolve(result))
                 .catch((err) => reject(err));
         });

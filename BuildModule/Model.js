@@ -42,7 +42,7 @@ Model.delete = function (id, tenantId) {
     });
 };
 
-Model.list = function (returnFields, limit, page, id, moduleId, search = null, tenantId) {
+Model.list = function (returnFields, limit, page, id, moduleId, tenantId, search = null,) {
     return new Promise(function (resolve, reject) {
         const db = getDb();
         const collection = 'module_' + tenantId.toString();
@@ -63,7 +63,6 @@ Model.list = function (returnFields, limit, page, id, moduleId, search = null, t
 
         if (id) match["_id"] = objectify(id);
         if (moduleId) match["moduleId"] = objectify(moduleId);
-        match["deleted"] = 0;
 
         const query = [
             { $match: match },
