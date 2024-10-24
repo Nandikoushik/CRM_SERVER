@@ -30,10 +30,7 @@ ModuleSchema.list = function (returnFields, limit, page, tenantId, id, search = 
     return new Promise(function (resolve, reject) {
         const db = getDb();
         let match = {};
-        let selectedColumns = {};
-
-        if (returnFields.length > 0)
-            returnFields.split(",").forEach(ele => selectedColumns[ele.trim()] = 1);
+        let selectedColumns = { createdDate: 1, modifiedDate: 1 };
 
         if (search && typeof search === 'string') {
             try {
@@ -54,7 +51,11 @@ ModuleSchema.list = function (returnFields, limit, page, tenantId, id, search = 
             { $limit: limit + 1 },
         ];
 
-        if (returnFields.length > 0) query.push({ $project: selectedColumns });
+        if (returnFields?.length > 0) {
+            returnFields.split(",").forEach((ele) => (selectedColumns[ele.trim()] = 1));
+            query.push({ $project: selectedColumns });
+        }
+
         db.collection("moduleSchema")
             .aggregate(query)
             .toArray((err, result) => {

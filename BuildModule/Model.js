@@ -6,7 +6,7 @@ const Model = {};
 Model.insert = function (tenantId, insertedData) {
     return new Promise(function (resolve, reject) {
         const db = getDb();
-        const collection = 'module_' + tenantId.toString();
+        const collection = "module_" + tenantId.toString();
         db.collection(collection).insertOne(insertedData, (err) => {
             if (err) reject({ success: false, message: err.message });
             resolve({ success: true });
@@ -17,15 +17,17 @@ Model.insert = function (tenantId, insertedData) {
 Model.update = function (id, tenantId, updatedData) {
     return new Promise(function (resolve, reject) {
         const db = getDb();
-        const collection = 'module_' + tenantId.toString();
+        const collection = "module_" + tenantId.toString();
         const match = { _id: objectify(id) };
-        db.collection(collection).findOneAndUpdate(match,
+        db.collection(collection).findOneAndUpdate(
+            match,
             { $set: updatedData },
             { returnOriginal: false },
             (err, result) => {
                 if (err) reject({ success: false, message: err.message });
                 resolve({ success: true, data: result.value });
-            });
+            }
+        );
     });
 };
 
@@ -33,33 +35,43 @@ Model.delete = function (id, tenantId) {
     return new Promise(function (resolve, reject) {
         const db = getDb();
         const match = { _id: objectify(id) };
-        const collection = 'module_' + tenantId.toString();
-        db.collection(collection).updateOne(match, { $set: { deleted: 1 } },
+        const collection = "module_" + tenantId.toString();
+        db.collection(collection).updateOne(
+            match,
+            { $set: { deleted: 1 } },
             (err) => {
                 if (err) reject({ success: false, message: err.message });
                 resolve({ success: true });
-            });
+            }
+        );
     });
 };
 
-Model.list = function (returnFields, limit, page, id, moduleId, tenantId, search = null,) {
+Model.list = function (
+    returnFields,
+    limit,
+    page,
+    id,
+    moduleId,
+    tenantId,
+    search = null
+) {
     return new Promise(function (resolve, reject) {
         const db = getDb();
-        const collection = 'module_' + tenantId.toString();
+        const collection = "module_" + tenantId.toString();
         let match = {};
-        let selectedColumns = {};
+        let selectedColumns = { createdDate: 1, modifiedDate: 1 };
 
-        if (search && typeof search === 'string') {
+        if (search && typeof search === "string") {
             try {
                 const searchObj = JSON.parse(search);
-                Object.keys(searchObj).forEach(element => match[element] = searchObj[element]);
+                Object.keys(searchObj).forEach(
+                    (element) => (match[element] = searchObj[element])
+                );
             } catch (error) {
                 console.log(error);
             }
         }
-
-        if (returnFields.length > 0)
-            returnFields.split(",").forEach(ele => selectedColumns[ele.trim()] = 1);
 
         if (id) match["_id"] = objectify(id);
         if (moduleId) match["moduleId"] = objectify(moduleId);
@@ -71,15 +83,23 @@ Model.list = function (returnFields, limit, page, id, moduleId, tenantId, search
             { $limit: limit + 1 },
         ];
 
-        if (returnFields.length > 0) query.push({ $project: selectedColumns });
+        if (returnFields?.length > 0) {
+            returnFields.split(",").forEach((ele) => (selectedColumns[ele.trim()] = 1));
+            query.push({ $project: selectedColumns });
+        }
+
         db.collection(collection)
             .aggregate(query)
             .toArray((err, result) => {
                 if (err) reject({ success: false, message: err.message });
-                const response = { success: true, data: filterArray(result, limit), next: result?.length > limit };
+                const response = {
+                    success: true,
+                    data: filterArray(result, limit),
+                    next: result?.length > limit,
+                };
                 resolve(response);
             });
     });
 };
 
-module.exports = Model;
+module.exports = Model
