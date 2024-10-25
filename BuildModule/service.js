@@ -11,7 +11,7 @@ const service = {
         });
     },
 
-    update(id, tenantId, updateData,) {
+    update(id, tenantId, updateData) {
         return new Promise(async (resolve, reject) => {
             model.update(id, tenantId, updateData,)
                 .then((result) => resolve(result))

@@ -22,6 +22,12 @@ module.exports = {
         const { id, tenant } = req.query;
         const updateObject = req.body;
         try {
+            if (updateObject?._id) delete updateObject._id;
+            if (updateObject?.createdDate) delete updateObject.createdDate;
+            if (updateObject?.createdBy) delete updateObject.createdBy;
+            updateObject.modifiedDate = isodate(updateObject.modifiedDate);
+            updateObject.moduleId = objectify(updateObject.moduleId);
+            updateObject.modifiedBy = objectify(updateObject.modifiedBy);
             const response = await service.update(id, tenant, updateObject);
             res.status(200).json(response);
         } catch (err) {

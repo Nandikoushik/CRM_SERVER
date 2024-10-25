@@ -22,8 +22,9 @@ Model.update = function (id, tenantId, updatedData) {
         db.collection(collection).findOneAndUpdate(
             match,
             { $set: updatedData },
-            { returnOriginal: false },
+            { returnNewDocument: true },
             (err, result) => {
+                console.log(result);
                 if (err) reject({ success: false, message: err.message });
                 resolve({ success: true, data: result.value });
             }
