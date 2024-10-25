@@ -25,6 +25,24 @@ module.exports = {
       next(err);
     }
   },
+
+  async updateSchema(req, res, next) {
+    const { id } = req.query;
+    const updateObject = req.body;
+    try {
+      if (updateObject?._id) delete updateObject._id;
+      if (updateObject?.createdDate) delete updateObject.createdDate;
+      if (updateObject?.createdBy) delete updateObject.createdBy;
+      updateObject.tenant = objectify(updateObject.tenant);
+      updateObject.modifiedDate = isodate(updateObject.modifiedDate);
+      updateObject.modifiedBy = objectify(updateObject.modifiedBy);
+      const response = await service.updateSchema(id, updateObject);
+      res.status(200).json(response);
+    } catch (err) {
+      next(err);
+    }
+  },
+
   async deleteSchema(req, res, next) {
     const id = req.query.id;
     try {

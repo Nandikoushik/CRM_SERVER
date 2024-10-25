@@ -11,6 +11,13 @@ const service = {
                 .catch((err) => reject(err));
         });
     },
+    updateSchema(id, updateData) {
+        return new Promise(async (resolve, reject) => {
+            model.updateSchema(id, updateData,)
+                .then((result) => resolve(result))
+                .catch((err) => reject(err));
+        });
+    },
     deleteSchema(id) {
         return new Promise(async (resolve, reject) => {
             model.delete(id)
@@ -23,7 +30,7 @@ const service = {
         let limit = parseInt(data.limit);
         let page = parseInt(data.page);
         const search = data?.search;
-        const id = data?.moduleId;
+        const id = data?.id;
         const tenantId = data?.tenant;
         if (!limit || limit > config.dbReadRecLimit) limit = config.dbReadRecLimit;
         if (!page) page = 0;

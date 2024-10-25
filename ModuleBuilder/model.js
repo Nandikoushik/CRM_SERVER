@@ -13,6 +13,22 @@ ModuleSchema.insert = function (data) {
     });
 };
 
+ModuleSchema.updateSchema = function (id, updatedData) {
+    return new Promise(function (resolve, reject) {
+        const db = getDb();
+        const match = { _id: objectify(id) };
+        db.collection("moduleSchema").findOneAndUpdate(
+            match,
+            { $set: updatedData },
+            { returnNewDocument: true },
+            (err, result) => {
+                if (err) reject({ success: false, message: err.message });
+                resolve({ success: true, data: result.value });
+            }
+        );
+    });
+};
+
 ModuleSchema.delete = function (id) {
     return new Promise(function (resolve, reject) {
         const db = getDb();
